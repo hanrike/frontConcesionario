@@ -39,10 +39,7 @@ const Ventas = () => {
         console.log('vehiculos seleccionados',vehiculosSeleccionados);
     },[vehiculosSeleccionados]);
 
-    const agregarNuevoVehiculo=()=>{
-        setVehiculosSeleccionados([...vehiculosSeleccionados,DropDownVehiculos]);
-    };
-
+    
     const submitForm = async (e) => {
         e.preventDefault();
         const fd = new FormData(form.current);
@@ -85,24 +82,9 @@ const Ventas = () => {
                 })}
             </select>
             </label>
-            <div className='flex flex-col'>
-                <span>Seleccion de vehiculos</span>
-                <button 
-                onClick={()=>agregarNuevoVehiculo()}
-                className='col-span-2 bg-green-400 p-2 rounded-full shadow-md hover:bg-green-600 text-white'
-            >
-                agregar nuevo vehiculo
-                </button>
-            </div>
 
-            {vehiculosSeleccionados.map((DropDownVehiculo,index)=>{
-            return (
-                <div className='flex'>
-                <DropDownVehiculo key={nanoid()} vehiculos={vehiculos} nombre={`vehiculo_${index}`}/>;
-                <button>eliminar</button>
-                </div> 
-                );
-            })}
+            
+            <TablaVehiculos vehiculos={vehiculos}  />
 
            
             <label className='flex flex-col'>
@@ -123,19 +105,79 @@ const Ventas = () => {
   );
 };
 
-const DropDownVehiculos=({vehiculos,nombre})=>{
-    return(
+const TablaVehiculos=({vehiculos})=>{
+    const [vehiculoAAgregar,setVehiculoAAgregar]=useState({});
+    const [filasTabla,setFilasTabla]=useState([]);
 
-    <label className='flex flex-col' htmlFor='vehiculo'>
-            <span className='text-2xl font-gray-900'>Vehiculo</span>
-            <select name={nombre}className='p-2' defaultValue={-1}>
-                <option disabled value={-1}>Seleccione un Vehiculo</option>
+useEffect(()=>{
+    console.log(vehiculoAAgregar);
+},[vehiculoAAgregar]);
+
+const agregarNuevoVehiculo=()=>{
+    setFilasTabla([...filasTabla,vehiculoAAgregar]);
+};
+
+const eliminarVehiculo=(vehiculoAEliminar)=>{
+    setFilasTabla(filasTabla.filter(v=>v.id_id!==vehiculoAEliminar._id))
+}
+
+    return(
+        <div>
+        <div className='flex '>
+                <label className='flex flex-col' htmlFor='vehiculo'>
+            <select 
+            className='p-2' 
+            value={vehiculoAAgregar._id ?? ''} 
+            onChange={e=>setVehiculoAAgregar(vehiculos.filter((v)=>v._id=== e.target.value)[0])}>
+
+                <option disabled value=''>
+                    Seleccione un Vehiculo
+                </option>
                 {vehiculos.map((el)=>{
                     return<option key={nanoid()} value={el._id}>{`${el.name} ${el.brand} ${el.model}`}</option>;
                 })}
             </select>
             </label>
-    );
-};
+                <button 
+                type='button'
+                onClick={()=>agregarNuevoVehiculo()}
+                className='col-span-2 bg-green-400 p-2 rounded-full shadow-md hover:bg-green-600 text-white'
+            >
+                Agregar Vehiculo
+                </button>
+                </div>
+                <table className='tabla'>
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filasTabla.map(el=>{
+                            return(
+                                <tr key={nanoid()}>
+                                    <td>{el._id}</td>
+                                    <td>{el.name}</td>
+                                    <td>{el.brand}</td>
+                                    <td>{el.model}</td>
+                                    <td>
+                                        <i onClick={()=>eliminarVehiculo(el)} 
+                                        className='fas fa-minus text-red-500 cursor-pointer'/>
+                                    </td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+            
+            </div>
+
+    )
+}
+
 
 export default Ventas;

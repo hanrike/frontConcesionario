@@ -9,7 +9,8 @@ const Ventas = () => {
     const form = useRef(null);
     const[vendedores,setVendedores]=useState([]);
     const[vehiculos,setVehiculos]=useState([]);
-    const[vehiculosSeleccionados,setVehiculosSeleccionados]=useState([]);
+    const[vehiculosTabla,setVehiculosTabla]=useState([])
+    
 
     useEffect(()=>{
         const fetchVendedores=async()=>{
@@ -35,10 +36,7 @@ const Ventas = () => {
         fetchVehiculos();
     },[]);
 
-    useEffect(()=>{
-        console.log('vehiculos seleccionados',vehiculosSeleccionados);
-    },[vehiculosSeleccionados]);
-
+   
     
     const submitForm = async (e) => {
         e.preventDefault();
@@ -51,23 +49,45 @@ const Ventas = () => {
 
         console.log('form data',formData);
 
-        // const infoConsolidada={
-        //     valor:formData.valor,
-        //     vendedor:vendedores.filter((v)=>v._id===formData.vendedor)[0],
-        //     vehiculo:vehiculos.filter((v)=>v._id===formData.vehiculo)[0],
-        // }
+        const listaVehiculos= Object.keys(formData).map((k)=>{
+            if(k.includes('vehiculo')){
+                return vehiculosTabla.filter((v)=>v._id===formData[k])[0];
+            }
+            return null;
+        })
+        .filter((v)=>v);
 
-        // console.log(formData);
+        console.log('lista antes de cantidad',listaVehiculos);
 
-        // await crearVenta(
-        //     infoConsolidada,
-        //     (response)=>{
-        //         console.log(response);
-        //     },
-        //     (error)=>{
-        //         console.error(error);
-        //     }
-        // );
+        Object.keys(formData).
+        forEach((k)=>{
+            if(k.includes('cantidad')){
+                const indice= parseInt(k.split('_')[1]);
+                listaVehiculos[indice]['cantidad']=formData[k];
+            }
+        });
+
+        console.log('lista despues de cantidad',listaVehiculos);
+
+       
+
+        const datosVenta={
+            vendedor:vendedores.filter((v)=>v._id===formData.vendedor)[0],
+            cantidad:formData.valor,
+            vehiculos:listaVehiculos,
+        };
+
+       console.log('lista vehiculos',listaVehiculos);
+
+       await crearVenta(
+           datosVenta,
+           (response)=>{
+               console.log(response);
+           },
+           (error)=>{
+               console.error(error);
+           }
+       )
     };
   return (
     <div className='flex h-full w-full overflow-y-scroll items-center justify-center'>
@@ -84,7 +104,7 @@ const Ventas = () => {
             </label>
 
             
-            <TablaVehiculos vehiculos={vehiculos}  />
+            <TablaVehiculos vehiculos={vehiculos} setVehiculos={setVehiculos} setVehiculosTabla={setVehiculosTabla} />
 
            
             <label className='flex flex-col'>
@@ -105,7 +125,7 @@ const Ventas = () => {
   );
 };
 
-const TablaVehiculos=({vehiculos})=>{
+const TablaVehiculos=({vehiculos,setVehiculos,setVehiculosTabla})=>{
     const [vehiculoAAgregar,setVehiculoAAgregar]=useState({});
     const [filasTabla,setFilasTabla]=useState([]);
 
@@ -113,12 +133,21 @@ useEffect(()=>{
     console.log(vehiculoAAgregar);
 },[vehiculoAAgregar]);
 
+useEffect(()=>{
+    console.log('filasTabla',filasTabla);
+    setVehiculosTabla(filasTabla);
+},[filasTabla,setVehiculosTabla]);
+
 const agregarNuevoVehiculo=()=>{
     setFilasTabla([...filasTabla,vehiculoAAgregar]);
+    setVehiculos(vehiculos.filter(v=>v._id!==vehiculoAAgregar._id));
+    setVehiculoAAgregar({});
 };
 
 const eliminarVehiculo=(vehiculoAEliminar)=>{
-    setFilasTabla(filasTabla.filter(v=>v.id_id!==vehiculoAEliminar._id))
+    setFilasTabla(filasTabla.filter(v=>v.id_id!==vehiculoAEliminar._id));
+    setVehiculos([...vehiculos,vehiculoAEliminar]);
+
 }
 
     return(
@@ -153,11 +182,13 @@ const eliminarVehiculo=(vehiculoAEliminar)=>{
                             <th>Nombre</th>
                             <th>Marca</th>
                             <th>Modelo</th>
+                            <th>Cantidad</th>
                             <th>Eliminar</th>
+                            <th className='hidden'>Input</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filasTabla.map(el=>{
+                        {filasTabla.map((el,index)=>{
                             return(
                                 <tr key={nanoid()}>
                                     <td>{el._id}</td>
@@ -165,9 +196,15 @@ const eliminarVehiculo=(vehiculoAEliminar)=>{
                                     <td>{el.brand}</td>
                                     <td>{el.model}</td>
                                     <td>
+                                        <label htmlFor={`valor_${index}`}>
+                                            <input type='number' name={`cantidad_${index}`}required/>
+                                        </label>
+                                    </td>
+                                    <td>
                                         <i onClick={()=>eliminarVehiculo(el)} 
                                         className='fas fa-minus text-red-500 cursor-pointer'/>
                                     </td>
+                                    <input hidden defaultValue={el._id} name={`vehiculo_${index}`}/>
                                 </tr>
                             )
                         })}

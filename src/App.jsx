@@ -11,6 +11,7 @@ import 'styles/styles.css';
 import Registro from 'pages/auth/Registro';
 import AuthLayout from 'layouts/AuthLayout';
 import { DarkModeContext } from 'context/darkMode';
+import { Auth0Provider } from "@auth0/auth0-react";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -19,7 +20,12 @@ function App() {
   }, [darkMode]);
 
   return (
-    <div className='App'>
+    <Auth0Provider
+    domain="misiontic2-concesionario.us.auth0.com"
+    clientId="GjpsfzaqhS7hEGNmmCHTM6i2T0nZuhow"
+    redirectUri={window.location.origin}
+    >
+     <div className='App'>
       <DarkModeContext.Provider value={{ darkMode, setDarkMode }}>
         <Router>
           <Switch>
@@ -61,6 +67,7 @@ function App() {
         </Router>
       </DarkModeContext.Provider>
     </div>
+    </Auth0Provider>
   );
 }
 

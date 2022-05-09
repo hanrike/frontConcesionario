@@ -23,7 +23,8 @@ function App() {
     <Auth0Provider
     domain="misiontic2-concesionario.us.auth0.com"
     clientId="GjpsfzaqhS7hEGNmmCHTM6i2T0nZuhow"
-    redirectUri={window.location.origin}
+    redirectUri='http://localhost:3000/admin'
+    audience='api-autenticacion-concesionario-mintic'
     >
      <div className='App'>
       <DarkModeContext.Provider value={{ darkMode, setDarkMode }}>

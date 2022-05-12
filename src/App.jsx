@@ -6,15 +6,18 @@ import Admin from 'pages/admin/Index';
 import Vehiculos from 'pages/admin/Vehiculos';
 import Login from 'pages/auth/Login';
 import Ventas from 'pages/admin/Ventas';
+import Usuarios from 'pages/admin/Usuarios';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import 'styles/styles.css';
 import Registro from 'pages/auth/Registro';
 import AuthLayout from 'layouts/AuthLayout';
 import { DarkModeContext } from 'context/darkMode';
 import { Auth0Provider } from "@auth0/auth0-react";
+import { UserContext } from 'context/userContext';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
+  const [userData,setUserData]=useState({});
   useEffect(() => {
     console.log('modo dark:', darkMode);
   }, [darkMode]);
@@ -27,10 +30,11 @@ function App() {
     audience='api-autenticacion-concesionario-mintic'
     >
      <div className='App'>
+       <UserContext.Provider value={{userData,setUserData}}>
       <DarkModeContext.Provider value={{ darkMode, setDarkMode }}>
         <Router>
           <Switch>
-            <Route path={['/admin', '/admin/vehiculos', '/admin/ventas']}>
+            <Route path={['/admin', '/admin/vehiculos', '/admin/ventas','/admin/usuarios']}>
               <PrivateLayout>
                 <Switch>
                   <Route path='/admin/vehiculos'>
@@ -38,6 +42,9 @@ function App() {
                   </Route>
                   <Route path='/admin/ventas'>
                     <Ventas/>
+                  </Route>
+                  <Route path='/admin/usuarios'>
+                    <Usuarios/>
                   </Route>
                   <Route path='/admin'>
                     <Admin />
@@ -67,6 +74,7 @@ function App() {
           </Switch>
         </Router>
       </DarkModeContext.Provider>
+      </UserContext.Provider>
     </div>
     </Auth0Provider>
   );

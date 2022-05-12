@@ -5,6 +5,7 @@ import { Dialog, Tooltip } from '@material-ui/core';
 import { obtenerVehiculos,crearVehiculo,editarVehiculo,eliminarVehiculo} from 'utils/api';
 import ReactLoading from 'react-loading';
 import 'react-toastify/dist/ReactToastify.css';
+import PrivateComponent from 'components/PrivateComponent';
 
 
 const Vehiculos = () => {
@@ -120,7 +121,9 @@ const TablaVehiculos = ({loading, listaVehiculos, setEjecutarConsulta }) => {
               <th>Nombre del vehículo</th>
               <th>Marca del vehículo</th>
               <th>Modelo del vehículo</th>
+              <PrivateComponent roleList={['admin']}>
               <th>Acciones</th>
+              </PrivateComponent>
             </tr>
           </thead>
           <tbody>
@@ -244,6 +247,7 @@ const FilaVehiculo = ({ vehiculo, setEjecutarConsulta }) => {
           <td>{vehiculo.model}</td>
         </>
       )}
+      <PrivateComponent roleList={['admin']}>
       <td>
         <div className='flex w-full justify-around'>
           {edit ? (
@@ -300,6 +304,7 @@ const FilaVehiculo = ({ vehiculo, setEjecutarConsulta }) => {
           </div>
         </Dialog>
       </td>
+      </PrivateComponent>
     </tr>
   );
 };

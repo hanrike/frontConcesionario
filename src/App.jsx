@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PrivateLayout from 'layouts/PrivateLayout';
 import PublicLayout from 'layouts/PublicLayout';
+import PrivateRoute from 'components/PrivateRoute';
 import Index from 'pages/Index';
 import Admin from 'pages/admin/Index';
 import Vehiculos from 'pages/admin/Vehiculos';
@@ -38,13 +39,19 @@ function App() {
               <PrivateLayout>
                 <Switch>
                   <Route path='/admin/vehiculos'>
+                    <PrivateRoute roleList={['admin']}>
                     <Vehiculos />
+                    </PrivateRoute>
                   </Route>
                   <Route path='/admin/ventas'>
+                    <PrivateRoute roleList={['admin','vendedor']}>
                     <Ventas/>
+                    </PrivateRoute>
                   </Route>
                   <Route path='/admin/usuarios'>
+                  <PrivateRoute roleList={['admin']}>
                     <Usuarios/>
+                  </PrivateRoute>
                   </Route>
                   <Route path='/admin'>
                     <Admin />

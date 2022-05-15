@@ -27,7 +27,8 @@ function App() {
     <Auth0Provider
     domain="misiontic2-concesionario.us.auth0.com"
     clientId="GjpsfzaqhS7hEGNmmCHTM6i2T0nZuhow"
-    redirectUri='http://localhost:3000/admin'
+    redirectUri='https://agile-wildwood-52544.herokuapp.com/admin'
+    //redirectUri='http://localhost:3000/admin'
     audience='api-autenticacion-concesionario-mintic'
     >
      <div className='App'>

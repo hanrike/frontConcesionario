@@ -59,7 +59,7 @@ export const eliminarVehiculo=async(id,sucessCallback,errorCallback)=>{
 
 export const obtenerUsuarios=async(sucessCallback,errorCallback)=>{
   const options={method:'GET',
-  url:`${baseURL}/usuarios`,
+  url:`${baseURL}/usuarios/`,
   headers:{
   Authorization: getToken(),
   }
@@ -69,7 +69,7 @@ export const obtenerUsuarios=async(sucessCallback,errorCallback)=>{
 
 export const obtenerDatosUsuario=async(sucessCallback,errorCallback)=>{
   const options={method:'GET',
-  url:`${baseURL}/usuarios/self`,
+  url:`${baseURL}/usuarios/self/`,
   headers:{
   Authorization: getToken(),
   }
@@ -92,7 +92,7 @@ export const editarUsuario=async(id,data,sucessCallback,errorCallback)=>{
 export const crearVenta=async(data,sucessCallback,errorCallback)=>{
   const options={
     method:'POST',
-    url:`${baseURL}/ventas`,
+    url:`${baseURL}/ventas/`,
     headers:{'Content-Type':'application/json',Authorization: getToken()},
     data,
     };

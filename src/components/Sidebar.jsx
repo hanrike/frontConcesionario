@@ -10,7 +10,7 @@ const Sidebar = () => {
 
   
   const cerrarSesion=()=>{
-    logout({returnTo:'http://localhost:3000/admin'})
+    logout({returnTo:'https://agile-wildwood-52544.herokuapp.com/admin'})
     localStorage.setItem('token',null);
   }
   return (

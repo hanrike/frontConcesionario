@@ -45,7 +45,9 @@ const PrivateLayout = ({ children }) => {
                     (err)=>{
                         console.log('err',err);
                         setLoadingUserInformation(false);
+                        //logout({returnTo:'http://localhost:3000/admin'})
                         logout({returnTo:'http://localhost:3000/admin'})
+                    
                     }
                 );
                 
